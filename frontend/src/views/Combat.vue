@@ -76,8 +76,12 @@
                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12 encounter" v-for="(e, i) in targets" :key="i">
                   <div class="encounter-container">
 
-                  <div class="enemy-character">
-                    <div class="encounter-element">
+                    <div v-bind:class="getWinChance(e.power, e.trait) === 'Unlikely' ? 'bounty-fight' : ''" class="enemy-character">
+                      <div v-tooltip="'Winning this fight will also forge a sword!'"
+                      v-if="getWinChance(e.power, e.trait) === 'Unlikely'" class="bounty-icon-div">
+                        <img class="bounty-icon" src="../assets/bounty.png" />
+                      </div>
+                      <div class="encounter-element">
                         <span :class="getCharacterTrait(e.trait).toLowerCase() + '-icon'" />
                       </div>
 
@@ -92,21 +96,21 @@
                       <div class="xp-gain">
                         +{{getPotentialXp(e)}} XP
                       </div>
-                  </div>
+                    </div>
 
-                  <div class="victory-chance">
-                    {{ getWinChance(e.power, e.trait) }} Victory
-                  </div>
+                    <div class="victory-chance">
+                      {{ getWinChance(e.power, e.trait) }} Victory
+                    </div>
 
-                  <big-button
-                    class="encounter-button btn-styled"
-                    :mainText="`Fight!`"
-                    v-tooltip="'Cost 40 stamina'"
-                    :disabled="(timeMinutes === 59 && timeSeconds >= 30) || waitingResults"
-                    @click="onClickEncounter(e)"
-                  />
+                    <big-button
+                      class="encounter-button btn-styled"
+                      :mainText="`Fight!`"
+                      v-tooltip="'Cost 40 stamina'"
+                      :disabled="(timeMinutes === 59 && timeSeconds >= 30) || waitingResults"
+                      @click="onClickEncounter(e)"
+                    />
 
-                  <p v-if="isLoadingTargets">Loading...</p>
+                    <p v-if="isLoadingTargets">Loading...</p>
                   </div>
                 </div>
               </div>
@@ -604,5 +608,21 @@ h1  {
   .encounter-button {
     top: 10vw;
   }
+}
+
+.bounty-fight {
+  border: 2px solid gold;
+}
+
+.bounty-icon-div {
+  position: relative;
+  height: 0px;
+  top: -5px;
+  align-self: flex-end;
+}
+
+.bounty-icon {
+  height: 30px;
+  width: 30px !important;
 }
 </style>
